@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+    <title>Image Evaluation</title>
+    <style>
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            /* text-align: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box; */
+        }
+
+        /* .instruction {
+            font-weight: bold;
+            color: red;
+            margin-bottom: 10px;
+        } */
+        .content {
+            text-align: left; /* Override to left-align this specific section */
+            margin: 0 auto;
+            /* max-width: 1200px; Optional: to center the content within a limited width */
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #555;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            margin: 10px 0;
+        }
+        .criteria {
+            font-weight: bold;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        /* Main container for all samples */
+        .container {
+            /* max-width: 1200px; */
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        .rd {
+            color: red;
+        }
+
+        /* Sample container for each set of background and options */
+        .sample-container {
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Row layout for background and options */
+        .row {
+            display: flex;
+            /* align-items: center; */
+            justify-content: space-around;
+        }
+
+        .main-label {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 360px;
+            display: inline-block;
+        }
+
+        /* Style for background container */
+        .background-container {
+            flex: 1;
+            text-align: center;
+            width: 100%;
+            margin-right: 20px;
+        }
+
+        .background-image {
+            /* width: 95%; */
+            max-width: 400px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* margin-top: 20px; */
+            /* margin-bottom: 20px; */
+        }
+
+        /* Container for options and main label */
+        .options-container {
+            /* flex: 1 1 2*calc(100% / 4); */
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Options aligned horizontally */
+        .option-group {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            /*max-width: 500px;*/
+        }
+
+        /* Style for option images */
+        .option-container {
+            text-align: center;
+            margin: 0 0px;
+            display: block;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .option-image {
+            /* width: 95%; */
+            max-width: 400px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* margin-bottom: 15px; */
+        }
+
+        .option-label {
+            font-size: 17px;
+            margin-top: 7px;
+            margin-bottom: 7px;
+            cursor: pointer;     
+        }
+        input[type="radio"] {
+            cursor: pointer;     
+        }
+        
+        .image-label {
+            font-size: 19px;
+            font-weight: bold;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .background-image, .option-image {
+                max-width: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .instruction {
+                font-size: 14px;
+            }
+
+            .background-image, .option-image {
+                max-width: 80px;
+            }
+        }
+         
+        .ga {
+            background-color: #F9F9F9;
+        }
+        .gb {
+            background-color: #EFEFEF;
+        }
+        .instruction {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- MTurk Instructions -->
+    <crowd-form>
+        <short-instructions>
+            Please check the instruction at the top of this page.
+        </short-instructions>
+        <div class="content">
+            <h1>Instructions for Video Evaluation Task</h1>
+            <p>This HIT contains <strong>10 tasks</strong>.</p>
+            <p>In each task, you’ll compare two videos. For each criterion, please indicate whether <b>Method A</b> or <b>Method B</b> performs better.</p>
+
+            <!-- <p>This HIT contains <strong>10 tasks</strong>. In each task, you’ll compare two results of inserting a target object, described by a caption, into a background image.</p> -->
+    
+            <div class="instructions">
+                <!-- <h2>Evaluation Criteria</h2> -->
+                <ul>
+                    <li><span class="criteria">1. Overall Quality</span> Does the talking head look realistic and detailed?</li>
+                    <li><span class="criteria">2. Lip Synchronization</span> Do the lips movements match with the speech audio?</li>
+                    <li><span class="criteria">3. Realistic Face Movement</span> Does the face movement look realistic and natural?</li>
+                    <li><span class="criteria">4. Overall Preference</span> Which video best achieves the audio-driven face animating task?</li>
+                </ul>
+            </div>
+    
+            <p><b style="color: red;">The instruction is intended to modify a specific part of the image while keeping the rest unchanged. An entirely new image that doesn’t resemble the original input should not receive a higher rating.</b></p>
+
+        </div>
+        
+
+        <!-- Sample 1 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <!-- <div class="background-container">
+                    <div class="image-label">Background 1</div>
+                    <img src="${background_1}" alt="Background Image for Sample 1" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_1}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_1}</p>
+                </div> -->
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <video width="320" height="240" controls>
+                                <source src="https://pratch.github.io/user-study/test_videos/218-1.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <video width="320" height="240" controls>
+                                <source src="https://pratch.github.io/user-study/test_videos/218-1.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s1_bg_op0">Method A</label>
+                            <input type="radio" id="s1_bg_op0" name="s1_bg" value="0" required>
+                            <label class="main-label"><b>Overall Quality</b></label>
+                            <label class="option-label" for="s1_bg_op1">Method B</label>
+                            <input type="radio" id="s1_bg_op1" name="s1_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s1_text_op0">Method A</label>
+                            <input type="radio" id="s1_text_op0" name="s1_text" value="0" required>
+                            <label class="main-label"><b>Lip Synchronization</b></label>
+                            <label class="option-label" for="s1_text_op1">Method B</label>
+                            <input type="radio" id="s1_text_op1" name="s1_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s1_qual_op0">Method A</label>
+                            <input type="radio" id="s1_qual_op0" name="s1_qual" value="0" required>
+                            <label class="main-label"><b>Realistic Face Movement</b></label>
+                            <label class="option-label" for="s1_qual_op1">Method B</label>
+                            <input type="radio" id="s1_qual_op1" name="s1_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s1_pref_op0">Method A</label>
+                            <input type="radio" id="s1_pref_op0" name="s1_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s1_pref_op1">Method B</label>
+                            <input type="radio" id="s1_pref_op1" name="s1_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 2 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 2</div>
+                    <img src="${background_2}" alt="Background Image for Sample 2" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_2}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_2}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s2_op0}" alt="Image A for Sample 2" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s2_op1}" alt="Image B for Sample 2" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s2_bg_op0">Method A</label>
+                            <input type="radio" id="s2_bg_op0" name="s2_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s2_bg_op1">Method B</label>
+                            <input type="radio" id="s2_bg_op1" name="s2_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s2_text_op0">Method A</label>
+                            <input type="radio" id="s2_text_op0" name="s2_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s2_text_op1">Method B</label>
+                            <input type="radio" id="s2_text_op1" name="s2_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s2_qual_op0">Method A</label>
+                            <input type="radio" id="s2_qual_op0" name="s2_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s2_qual_op1">Method B</label>
+                            <input type="radio" id="s2_qual_op1" name="s2_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s2_pref_op0">Method A</label>
+                            <input type="radio" id="s2_pref_op0" name="s2_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s2_pref_op1">Method B</label>
+                            <input type="radio" id="s2_pref_op1" name="s2_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 3 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 3</div>
+                    <img src="${background_3}" alt="Background Image for Sample 3" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_3}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_3}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s3_op0}" alt="Image A for Sample 3" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s3_op1}" alt="Image B for Sample 3" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s3_bg_op0">Method A</label>
+                            <input type="radio" id="s3_bg_op0" name="s3_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s3_bg_op1">Method B</label>
+                            <input type="radio" id="s3_bg_op1" name="s3_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s3_text_op0">Method A</label>
+                            <input type="radio" id="s3_text_op0" name="s3_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s3_text_op1">Method B</label>
+                            <input type="radio" id="s3_text_op1" name="s3_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s3_qual_op0">Method A</label>
+                            <input type="radio" id="s3_qual_op0" name="s3_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s3_qual_op1">Method B</label>
+                            <input type="radio" id="s3_qual_op1" name="s3_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s3_pref_op0">Method A</label>
+                            <input type="radio" id="s3_pref_op0" name="s3_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s3_pref_op1">Method B</label>
+                            <input type="radio" id="s3_pref_op1" name="s3_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 4 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 4</div>
+                    <img src="${background_4}" alt="Background Image for Sample 4" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_4}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_4}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s4_op0}" alt="Image A for Sample 4" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s4_op1}" alt="Image B for Sample 4" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s4_bg_op0">Method A</label>
+                            <input type="radio" id="s4_bg_op0" name="s4_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s4_bg_op1">Method B</label>
+                            <input type="radio" id="s4_bg_op1" name="s4_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s4_text_op0">Method A</label>
+                            <input type="radio" id="s4_text_op0" name="s4_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s4_text_op1">Method B</label>
+                            <input type="radio" id="s4_text_op1" name="s4_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s4_qual_op0">Method A</label>
+                            <input type="radio" id="s4_qual_op0" name="s4_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s4_qual_op1">Method B</label>
+                            <input type="radio" id="s4_qual_op1" name="s4_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s4_pref_op0">Method A</label>
+                            <input type="radio" id="s4_pref_op0" name="s4_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s4_pref_op1">Method B</label>
+                            <input type="radio" id="s4_pref_op1" name="s4_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 5 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 5</div>
+                    <img src="${background_5}" alt="Background Image for Sample 5" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_5}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_5}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s5_op0}" alt="Image A for Sample 5" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s5_op1}" alt="Image B for Sample 5" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s5_bg_op0">Method A</label>
+                            <input type="radio" id="s5_bg_op0" name="s5_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s5_bg_op1">Method B</label>
+                            <input type="radio" id="s5_bg_op1" name="s5_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s5_text_op0">Method A</label>
+                            <input type="radio" id="s5_text_op0" name="s5_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s5_text_op1">Method B</label>
+                            <input type="radio" id="s5_text_op1" name="s5_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s5_qual_op0">Method A</label>
+                            <input type="radio" id="s5_qual_op0" name="s5_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s5_qual_op1">Method B</label>
+                            <input type="radio" id="s5_qual_op1" name="s5_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s5_pref_op0">Method A</label>
+                            <input type="radio" id="s5_pref_op0" name="s5_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s5_pref_op1">Method B</label>
+                            <input type="radio" id="s5_pref_op1" name="s5_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 6 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 6</div>
+                    <img src="${background_6}" alt="Background Image for Sample 6" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_6}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_6}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s6_op0}" alt="Image A for Sample 6" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s6_op1}" alt="Image B for Sample 6" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s6_bg_op0">Method A</label>
+                            <input type="radio" id="s6_bg_op0" name="s6_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s6_bg_op1">Method B</label>
+                            <input type="radio" id="s6_bg_op1" name="s6_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s6_text_op0">Method A</label>
+                            <input type="radio" id="s6_text_op0" name="s6_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s6_text_op1">Method B</label>
+                            <input type="radio" id="s6_text_op1" name="s6_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s6_qual_op0">Method A</label>
+                            <input type="radio" id="s6_qual_op0" name="s6_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s6_qual_op1">Method B</label>
+                            <input type="radio" id="s6_qual_op1" name="s6_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s6_pref_op0">Method A</label>
+                            <input type="radio" id="s6_pref_op0" name="s6_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s6_pref_op1">Method B</label>
+                            <input type="radio" id="s6_pref_op1" name="s6_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 7 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 7</div>
+                    <img src="${background_7}" alt="Background Image for Sample 7" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_7}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_7}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s7_op0}" alt="Image A for Sample 7" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s7_op1}" alt="Image B for Sample 7" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s7_bg_op0">Method A</label>
+                            <input type="radio" id="s7_bg_op0" name="s7_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s7_bg_op1">Method B</label>
+                            <input type="radio" id="s7_bg_op1" name="s7_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s7_text_op0">Method A</label>
+                            <input type="radio" id="s7_text_op0" name="s7_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s7_text_op1">Method B</label>
+                            <input type="radio" id="s7_text_op1" name="s7_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s7_qual_op0">Method A</label>
+                            <input type="radio" id="s7_qual_op0" name="s7_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s7_qual_op1">Method B</label>
+                            <input type="radio" id="s7_qual_op1" name="s7_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s7_pref_op0">Method A</label>
+                            <input type="radio" id="s7_pref_op0" name="s7_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s7_pref_op1">Method B</label>
+                            <input type="radio" id="s7_pref_op1" name="s7_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 8 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 8</div>
+                    <img src="${background_8}" alt="Background Image for Sample 8" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_8}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_8}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s8_op0}" alt="Image A for Sample 8" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s8_op1}" alt="Image B for Sample 8" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s8_bg_op0">Method A</label>
+                            <input type="radio" id="s8_bg_op0" name="s8_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s8_bg_op1">Method B</label>
+                            <input type="radio" id="s8_bg_op1" name="s8_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s8_text_op0">Method A</label>
+                            <input type="radio" id="s8_text_op0" name="s8_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s8_text_op1">Method B</label>
+                            <input type="radio" id="s8_text_op1" name="s8_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s8_qual_op0">Method A</label>
+                            <input type="radio" id="s8_qual_op0" name="s8_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s8_qual_op1">Method B</label>
+                            <input type="radio" id="s8_qual_op1" name="s8_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s8_pref_op0">Method A</label>
+                            <input type="radio" id="s8_pref_op0" name="s8_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s8_pref_op1">Method B</label>
+                            <input type="radio" id="s8_pref_op1" name="s8_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 9 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 9</div>
+                    <img src="${background_9}" alt="Background Image for Sample 9" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_9}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_9}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s9_op0}" alt="Image A for Sample 9" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s9_op1}" alt="Image B for Sample 9" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s9_bg_op0">Method A</label>
+                            <input type="radio" id="s9_bg_op0" name="s9_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s9_bg_op1">Method B</label>
+                            <input type="radio" id="s9_bg_op1" name="s9_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s9_text_op0">Method A</label>
+                            <input type="radio" id="s9_text_op0" name="s9_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s9_text_op1">Method B</label>
+                            <input type="radio" id="s9_text_op1" name="s9_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s9_qual_op0">Method A</label>
+                            <input type="radio" id="s9_qual_op0" name="s9_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s9_qual_op1">Method B</label>
+                            <input type="radio" id="s9_qual_op1" name="s9_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s9_pref_op0">Method A</label>
+                            <input type="radio" id="s9_pref_op0" name="s9_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s9_pref_op1">Method B</label>
+                            <input type="radio" id="s9_pref_op1" name="s9_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample 10 -->
+        <div class="sample-container">
+            <div class="row">
+                <!-- Background container with description -->
+                <div class="background-container">
+                    <div class="image-label">Background 10</div>
+                    <img src="${background_10}" alt="Background Image for Sample 10" class="background-image">
+                    <p class="instruction"><b>Instruction:</b> ${target_10}</p>
+                    <p class="instruction"><b>Target Caption:</b> ${caption_10}</p>
+                </div>
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Method A</div>
+                            <img src="${s10_op0}" alt="Image A for Sample 10" class="option-image">
+                        </div>
+                        <!-- Image B -->
+                        <div class="option-container">
+                            <div class="image-label">Method B</div>
+                            <img src="${s10_op1}" alt="Image B for Sample 10" class="option-image">
+                        </div>
+                    </div>
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s10_bg_op0">Method A</label>
+                            <input type="radio" id="s10_bg_op0" name="s10_bg" value="0" required>
+                            <label class="main-label"><b>Background Preservation</b></label>
+                            <label class="option-label" for="s10_bg_op1">Method B</label>
+                            <input type="radio" id="s10_bg_op1" name="s10_bg" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s10_text_op0">Method A</label>
+                            <input type="radio" id="s10_text_op0" name="s10_text" value="0" required>
+                            <label class="main-label"><b>Instruction Adherence</b></label>
+                            <label class="option-label" for="s10_text_op1">Method B</label>
+                            <input type="radio" id="s10_text_op1" name="s10_text" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="s10_qual_op0">Method A</label>
+                            <input type="radio" id="s10_qual_op0" name="s10_qual" value="0" required>
+                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
+                            <label class="option-label" for="s10_qual_op1">Method B</label>
+                            <input type="radio" id="s10_qual_op1" name="s10_qual" value="1" required>
+                        </div>
+                    </div>
+                    <!-- Overall Preference -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="s10_pref_op0">Method A</label>
+                            <input type="radio" id="s10_pref_op0" name="s10_pref" value="0" required>
+                            <label class="main-label"><b>Overall Preference</b></label>
+                            <label class="option-label" for="s10_pref_op1">Method B</label>
+                            <input type="radio" id="s10_pref_op1" name="s10_pref" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Repeat for more samples as needed -->
+        
+    </crowd-form>
+</div>
+</body>
+</html>
