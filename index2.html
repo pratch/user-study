@@ -184,6 +184,29 @@
         .instruction {
             font-size: 18px;
         }
+
+        /* Table form styles */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th, .comparison-table td {
+            text-align: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Alternate row colors */
+        .comparison-table tr:nth-child(odd) {
+            background-color: #f9f9f9; /* Light gray */
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #efefef; /* White */
+        }
+
     </style>
 </head>
 <body>
@@ -218,28 +241,21 @@
         <!-- Sample 1 -->
         <div class="sample-container">
             <div class="row">
-                <!-- Background container with description -->
-                <!-- <div class="background-container">
-                    <div class="image-label">Background 1</div>
-                    <img src="${background_1}" alt="Background Image for Sample 1" class="background-image">
-                    <p class="instruction"><b>Instruction:</b> ${target_1}</p>
-                    <p class="instruction"><b>Target Caption:</b> ${caption_1}</p>
-                </div> -->
                 <div class="options-container">
                     <div class="option-group">
                         <!-- Image A -->
                         <div class="option-container">
                             <div class="image-label">Method A</div>
-                            <video width="320" height="240" controls>
-                                <source src="https://pratch.github.io/user-study/test_videos/218-1.mp4" type="video/mp4">
+                            <video  height="500" controls>
+                                <source src="https://pratch.github.io/user-study/processed/ours-218A.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
                         <!-- Image B -->
                         <div class="option-container">
                             <div class="image-label">Method B</div>
-                            <video width="320" height="240" controls>
-                                <source src="https://pratch.github.io/user-study/test_videos/218-1.mp4" type="video/mp4">
+                            <video height="500" controls>
+                                <source src="https://pratch.github.io/user-study/processed/GA-218A.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -291,66 +307,64 @@
         <!-- Sample 2 -->
         <div class="sample-container">
             <div class="row">
-                <!-- Background container with description -->
-                <div class="background-container">
-                    <div class="image-label">Background 2</div>
-                    <img src="${background_2}" alt="Background Image for Sample 2" class="background-image">
-                    <p class="instruction"><b>Instruction:</b> ${target_2}</p>
-                    <p class="instruction"><b>Target Caption:</b> ${caption_2}</p>
-                </div>
                 <div class="options-container">
                     <div class="option-group">
-                        <!-- Image A -->
+                        <!-- Video Display -->
                         <div class="option-container">
-                            <div class="image-label">Method A</div>
-                            <img src="${s2_op0}" alt="Image A for Sample 2" class="option-image">
-                        </div>
-                        <!-- Image B -->
-                        <div class="option-container">
-                            <div class="image-label">Method B</div>
-                            <img src="${s2_op1}" alt="Image B for Sample 2" class="option-image">
+                            <div class="image-label">Comparing 4 methods</div>
+                            <video height="500" controls>
+                                <source src="https://pratch.github.io/user-study/processed/concat-218A.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
                         </div>
                     </div>
-                    <!-- Background -->
-                    <div class="option-group ga">
-                        <div class="option-container">
-                            <label class="option-label" for="s2_bg_op0">Method A</label>
-                            <input type="radio" id="s2_bg_op0" name="s2_bg" value="0" required>
-                            <label class="main-label"><b>Background Preservation</b></label>
-                            <label class="option-label" for="s2_bg_op1">Method B</label>
-                            <input type="radio" id="s2_bg_op1" name="s2_bg" value="1" required>
-                        </div>
-                    </div>
-                    <!-- Instruction Adherence -->
-                    <div class="option-group gb">
-                        <div class="option-container">
-                            <label class="option-label" for="s2_text_op0">Method A</label>
-                            <input type="radio" id="s2_text_op0" name="s2_text" value="0" required>
-                            <label class="main-label"><b>Instruction Adherence</b></label>
-                            <label class="option-label" for="s2_text_op1">Method B</label>
-                            <input type="radio" id="s2_text_op1" name="s2_text" value="1" required>
-                        </div>
-                    </div>
-                    <!-- Image Quality -->
-                    <div class="option-group ga">
-                        <div class="option-container">
-                            <label class="option-label" for="s2_qual_op0">Method A</label>
-                            <input type="radio" id="s2_qual_op0" name="s2_qual" value="0" required>
-                            <label class="main-label"><b>Image Quality of Edited Area</b></label>
-                            <label class="option-label" for="s2_qual_op1">Method B</label>
-                            <input type="radio" id="s2_qual_op1" name="s2_qual" value="1" required>
-                        </div>
-                    </div>
-                    <!-- Overall Preference -->
-                    <div class="option-group gb">
-                        <div class="option-container">
-                            <label class="option-label" for="s2_pref_op0">Method A</label>
-                            <input type="radio" id="s2_pref_op0" name="s2_pref" value="0" required>
-                            <label class="main-label"><b>Overall Preference</b></label>
-                            <label class="option-label" for="s2_pref_op1">Method B</label>
-                            <input type="radio" id="s2_pref_op1" name="s2_pref" value="1" required>
-                        </div>
-                    </div>
+        
+                    <!-- Form Questions in Table Format -->
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Method A</th>
+                                <th>Method B</th>
+                                <th>Method C</th>
+                                <th>Method D</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Overall Quality -->
+                            <tr>
+                                <td><b>Overall Quality</b></td>
+                                <td><input type="radio" id="s2_bg_op0" name="s2_bg" value="0" required></td>
+                                <td><input type="radio" id="s2_bg_op1" name="s2_bg" value="1" required></td>
+                                <td><input type="radio" id="s2_bg_op2" name="s2_bg" value="2" required></td>
+                                <td><input type="radio" id="s2_bg_op3" name="s2_bg" value="3" required></td>
+                            </tr>
+                            <!-- Lip Synchronization -->
+                            <tr>
+                                <td><b>Lip Synchronization</b></td>
+                                <td><input type="radio" id="s2_text_op0" name="s2_text" value="0" required></td>
+                                <td><input type="radio" id="s2_text_op1" name="s2_text" value="1" required></td>
+                                <td><input type="radio" id="s2_text_op2" name="s2_text" value="2" required></td>
+                                <td><input type="radio" id="s2_text_op3" name="s2_text" value="3" required></td>
+                            </tr>
+                            <!-- Realistic Face Movement -->
+                            <tr>
+                                <td><b>Realistic Face Movement</b></td>
+                                <td><input type="radio" id="s2_qual_op0" name="s2_qual" value="0" required></td>
+                                <td><input type="radio" id="s2_qual_op1" name="s2_qual" value="1" required></td>
+                                <td><input type="radio" id="s2_qual_op2" name="s2_qual" value="2" required></td>
+                                <td><input type="radio" id="s2_qual_op3" name="s2_qual" value="3" required></td>
+                            </tr>
+                            <!-- Overall Preference -->
+                            <tr>
+                                <td><b>Overall Preference</b></td>
+                                <td><input type="radio" id="s2_pref_op0" name="s2_pref" value="0" required></td>
+                                <td><input type="radio" id="s2_pref_op1" name="s2_pref" value="1" required></td>
+                                <td><input type="radio" id="s2_pref_op2" name="s2_pref" value="2" required></td>
+                                <td><input type="radio" id="s2_pref_op3" name="s2_pref" value="3" required></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
