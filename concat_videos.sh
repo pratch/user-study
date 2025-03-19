@@ -20,10 +20,12 @@ out_concat=$out_path"/"$concat_name
 
 ffmpeg -i $video4.mp4 -y -vf "pad=550:802:(550-512)/2:(802-512)/2:black" ${out_video4}_padded.mp4
 
-ffmpeg -i $video1.mp4 -y -vf "drawtext=text='Method A':fontfile='font/BAHNSCHRIFT.TTF':fontsize=62:x=(w-text_w)/2:y=10:fontcolor=white:borderw=3:bordercolor=black" $out_video1.mp4
-ffmpeg -i $video2.mp4 -y -vf "drawtext=text='Method B':fontfile='font/BAHNSCHRIFT.TTF':fontsize=62:x=(w-text_w)/2:y=10:fontcolor=white:borderw=3:bordercolor=black" $out_video2.mp4
-ffmpeg -i $video3.mp4 -y -vf "drawtext=text='Method C':fontfile='font/BAHNSCHRIFT.TTF':fontsize=62:x=(w-text_w)/2:y=10:fontcolor=white:borderw=3:bordercolor=black" $out_video3.mp4
-ffmpeg -i ${out_video4}_padded.mp4 -y -vf "drawtext=text='Method D':fontfile='font/BAHNSCHRIFT.TTF':fontsize=62:x=(w-text_w)/2:y=10:fontcolor=white:borderw=3:bordercolor=black" $out_video4.mp4
+font_style="fontfile='font/BAHNSCHRIFT.TTF':fontsize=62:x=(w-text_w)/2:y=10:fontcolor=white:borderw=3:bordercolor=black"
+
+ffmpeg -i $video1.mp4 -y -vf "drawtext=text='Method A':$font_style" $out_video1.mp4
+ffmpeg -i $video2.mp4 -y -vf "drawtext=text='Method B':$font_style" $out_video2.mp4
+ffmpeg -i $video3.mp4 -y -vf "drawtext=text='Method C':$font_style" $out_video3.mp4
+ffmpeg -i ${out_video4}_padded.mp4 -y -vf "drawtext=text='Method D':$font_style" $out_video4.mp4
 
 ffmpeg -f lavfi -y -i color=c=black:s=20x802 -t 10 spacer.mp4
 
