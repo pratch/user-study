@@ -368,8 +368,8 @@
         <script>
             // generate the questions
         
-            const question_strings = "${q_strings}";
-            // let question_strings = "pair_218_A_ours_vs_ga#pair_074_B_talkg_vs_ours";
+            // const question_strings = "${q_strings}";
+            let question_strings = "pair_218_A_ours_vs_ga#pair_074_B_talkg_vs_ours";
             // let question_strings = "pair_253_A_ours_vs_talkg#pair_306_A_ours_vs_ga#pair_264_B_instag_vs_ours#pair_306_B_talkg_vs_ours#pair_306_A_ours_vs_talkg#pair_104_A_talkg_vs_ours#pair_302_A_instag_vs_ours#pair_304_A_ga_vs_ours#pair_253_B_ours_vs_instag";
 
             let questions = question_strings.split("#");
@@ -412,17 +412,17 @@
                 video.addEventListener('ended', () => {
                     warning.style.display = 'none';
 
-                    const radios1 = document.querySelectorAll(`input[name="${subj}_${sen}_${methodA}_${methodB}_q1"]`);
+                    const radios1 = document.querySelectorAll('input[name="' + subj + '_' + sen + '_' + methodA + '_' + methodB + '_q1"]');
                     radios1.forEach(radio => {
                         console.log(radio);
                         radio.disabled = false;
                     });
-                    const radios2 = document.querySelectorAll(`input[name="${subj}_${sen}_${methodA}_${methodB}_q2"]`);
+                    const radios2 = document.querySelectorAll('input[name="' + subj + '_' + sen + '_' + methodA + '_' + methodB + '_q2"]');
                     radios2.forEach(radio => {
                         console.log(radio);
                         radio.disabled = false;
                     });
-                    const radios3 = document.querySelectorAll(`input[name="${subj}_${sen}_${methodA}_${methodB}_q3"]`);
+                    const radios3 = document.querySelectorAll('input[name="' + subj + '_' + sen + '_' + methodA + '_' + methodB + '_q1"]');
                     radios3.forEach(radio => {
                         console.log(radio);
                         radio.disabled = false;
