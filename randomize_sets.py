@@ -89,6 +89,8 @@ for i, b in enumerate(buckets):
     # print(f"Row {i+1}: {row}")
     print(row)
 
+# sanity check: unique combi in all buckets
+
 
 # create pandas dataframe where each row
         

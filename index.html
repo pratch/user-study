@@ -314,7 +314,7 @@
                     <div class="option-group">
                         <!-- Image A -->
                         <div class="option-container">
-                            <div class="image-label">Task #1: Do you prefer method A or B?</div>
+                            <div class="image-label">Task #{tasknum}: Do you prefer method A or B?</div>
                             <video id="{question}-video" width="1120" controlsList="nodownload noremoteplayback" controls>
                                 <source src="https://pratch.github.io/user-study/final_videos_concat/{question}.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
@@ -389,6 +389,7 @@
                 let sen = question_components[2];
                 let methodA = question_components[3];
                 let methodB = question_components[5];
+                let tasknum = i + 1;
 
                 console.log(subj, sen, methodA, methodB);
         
@@ -398,7 +399,8 @@
                 tem = tem.replace(/{methodA}/g, methodA);
                 tem = tem.replace(/{methodB}/g, methodB);
                 tem = tem.replace(/{question}/g, questions[i]);
-                console.log(tem);
+                tem = tem.replace(/{tasknum}/g, tasknum);
+                // console.log(tem);
             
                 div.innerHTML = tem;
         
@@ -475,7 +477,7 @@
                     const enabledRadios = Array.from(groupRadios).filter(r => !r.disabled && !r.closest('.template'));
                     const oneIsChecked = enabledRadios.some(r => r.checked);
 
-                    // console.log(`Group "${name}": ${enabledRadios.length} enabled, one checked?`, oneIsChecked);
+                    // console.log(`Group "$name_tofill{}": ${enabledRadios.length} enabled, one checked?`, oneIsChecked);
 
                     if (enabledRadios.length === 0 || !oneIsChecked) {
                         allAnswered = false;
