@@ -1,5 +1,5 @@
 base_path="test_videos"
-out_path="processed"
+out_path="test_processed"
 
 video1_name="ours-218A"
 video2_name="GA-218A"
