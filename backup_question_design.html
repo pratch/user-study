@@ -1,0 +1,49 @@
+<!-- Sample 2 -->
+<div class="sample-container">
+    <div class="row">
+        <div class="options-container">
+            <div class="option-group">
+                <!-- Video Display -->
+                <div class="option-container">
+                    <div class="image-label">Task #2: Do you prefer method A or B? (Play the video)</div>
+                    <video width="1120" controls>
+                        <source src="https://pratch.github.io/user-study/final_videos_concat/pair_218_A_ours_vs_ga.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Form Questions in Table Format -->
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Method A</th>
+                        <th>Method B</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Overall Quality -->
+                    <tr>
+                        <td><b>Lip Synchronization</b><br>Which lip movements match with the audio better?</td>
+                        <td><input type="radio" id="s2_bg_op0" name="s2_bg" value="0" required></td>
+                        <td><input type="radio" id="s2_bg_op1" name="s2_bg" value="1" required></td>
+                    </tr>
+                    <!-- Lip Synchronization -->
+                    <tr>
+                        <td><b>Video Realness</b><br>Which looks more realistic and natural?</td>
+                        <td><input type="radio" id="s2_text_op0" name="s2_text" value="0" required></td>
+                        <td><input type="radio" id="s2_text_op1" name="s2_text" value="1" required></td>
+                    </tr>
+                    <!-- Realistic Face Movement -->
+                    <tr>
+                        <td><b>Image Quality</b><br>Which looks sharper and more detailed?</td>
+                        <td><input type="radio" id="s2_qual_op0" name="s2_qual" value="0" required></td>
+                        <td><input type="radio" id="s2_qual_op1" name="s2_qual" value="1" required></td>
+                    </tr>
+                    <!-- Overall Preference -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

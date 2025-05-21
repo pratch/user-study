@@ -4,8 +4,6 @@ import pickle
 
 random.seed(42)
 
-num_responders = 20
-
 subjects = ['074','104','218','253','264','302','304','306','460']
 sentences = ['A','B']
 baselines = ['ga','talkg','instag']
@@ -13,23 +11,20 @@ baselines = ['ga','talkg','instag']
 combinations = list(product(subjects, sentences, baselines))
 random.shuffle(combinations)
 
+# split into 3 sets (9 vids each) or 3 sets (18 vids each)
 num_sets = 6
 num_pairs_per_set = len(combinations) // num_sets
 sets = []
 for i in range(num_sets):
-    start = i * num_pairs_per_set
-    end = start + num_pairs_per_set
-    sets.append(combinations[start:end])
+    sets.append(combinations[i*num_sets : i*num_sets + num_pairs_per_set])
 
-# For each set, assign exactly 50% ours_left True, 50% False, then shuffle
+
+# for each combination, append to the tuple a random boolean (ours_left)
 for i, s in enumerate(sets):
-    n = len(s)
-    n_true = n // 2
-    n_false = n - n_true
-    ours_left_flags = [True]*n_true + [False]*n_false
-    random.shuffle(ours_left_flags)
-    sets[i] = [(*c, ours_left_flags[j]) for j, c in enumerate(s)]
-    random.shuffle(sets[i])  # Shuffle the ordering of questions inside the set
+    for j, c in enumerate(s):
+        subject, sentence, baseline = c
+        random_bool = random.choice([True, False])
+        sets[i][j] = (subject, sentence, baseline, random_bool)
 
 # print the sets 
 for i, s in enumerate(sets):
