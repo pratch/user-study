@@ -471,7 +471,7 @@
                 // console.log("Checking the following radio groups:", [...radioGroups]);
 
                 radioGroups.forEach(name => {
-                    const groupRadios = document.querySelectorAll(`input[name="${name}"]`);
+                    const groupRadios = document.querySelectorAll('input[name="' + name + '"]');
                     const enabledRadios = Array.from(groupRadios).filter(r => !r.disabled && !r.closest('.template'));
                     const oneIsChecked = enabledRadios.some(r => r.checked);
 
