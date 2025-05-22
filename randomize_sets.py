@@ -1,6 +1,7 @@
 from itertools import product
 import random
 import pickle
+import pandas as pd
 
 random.seed(44)
 
@@ -26,7 +27,7 @@ for i in range(num_responders // 2):
 # show all combinations
 for i, c in enumerate(combinations):
     subject, sentence, baseline, ours_left = c
-    print(f"Combination {i+1}: {subject}, {sentence}, {baseline}, {ours_left}")
+    # print(f"Combination {i+1}: {subject}, {sentence}, {baseline}, {ours_left}")
 
 
 buckets = []
@@ -59,77 +60,77 @@ for i in range(num_HITs):
 
 # sanity check:  
 # check if ('074','A','ga',True) appear exactly 10 times in all buckets
-count = 0
-for i, b in enumerate(buckets):
-    for c in b:
-        subject, sentence, baseline, ours_left = c
-        if (subject, sentence, baseline, ours_left) == ('074','A','ga',True):
-            count += 1
-print(f"Count of ('074','A','ga',True): {count}")
-count = 0
-for i, b in enumerate(buckets):
-    for c in b:
-        subject, sentence, baseline, ours_left = c
-        if (subject, sentence, baseline, ours_left) == ('074','A','ga',False):
-            count += 1
-print(f"Count of ('074','A','ga',False): {count}")
+# count = 0
+# for i, b in enumerate(buckets):
+#     for c in b:
+#         subject, sentence, baseline, ours_left = c
+#         if (subject, sentence, baseline, ours_left) == ('074','A','ga',True):
+#             count += 1
+# print(f"Count of ('074','A','ga',True): {count}")
+# count = 0
+# for i, b in enumerate(buckets):
+#     for c in b:
+#         subject, sentence, baseline, ours_left = c
+#         if (subject, sentence, baseline, ours_left) == ('074','A','ga',False):
+#             count += 1
+# print(f"Count of ('074','A','ga',False): {count}")
+
+# sanity check: do all buckets have unique combinations?
+# for i, b in enumerate(buckets):
+#     unique_combinations = set()
+#     for c in b:
+#         subject, sentence, baseline, ours_left = c
+#         unique_combinations.add((subject, sentence, baseline))
+#     if len(unique_combinations) != len(b):
+#         print(f"Bucket {i+1} has duplicate combinations")
+#     else:
+#         print(f"Bucket {i+1} has unique combinations")
+
+# sanity check: count number of apperances of each combination (should be 20, 10 for each ours_left)
+# combination_counts = {}
+# for i, b in enumerate(buckets):
+#     for c in b:
+#         subject, sentence, baseline, ours_left = c
+#         if (subject, sentence, baseline) not in combination_counts:
+#             combination_counts[(subject, sentence, baseline)] = 0
+#         combination_counts[(subject, sentence, baseline)] += 1
+# # print the counts
+# for k, v in combination_counts.items():
+#     subject, sentence, baseline = k
+#     print(f"Combination {subject}, {sentence}, {baseline}: {v} times")
 
 # generate csv where each row is in form of "pair_218_A_ours_vs_ga" (repeated 9 times, delimited by #) from the buckets
+
+all_bucket_strings = []
 for i, b in enumerate(buckets):
-    row = []
+    row_pairs = []
     for j, c in enumerate(b):
         subject, sentence, baseline, ours_left = c
         if ours_left:
             filename = f"pair_{subject}_{sentence}_ours_vs_{baseline}"
         else:
             filename = f"pair_{subject}_{sentence}_{baseline}_vs_ours"
-        row.append(filename)
+        row_pairs.append(filename)
+
     # combine the row into a string
-    row = "#".join(row)
-    # print(f"Row {i+1}: {row}")
-    print(row)
-
-# sanity check: unique combi in all buckets
+    string_pairs = "#".join(row_pairs)
+    all_bucket_strings.append(string_pairs)
 
 
-# create pandas dataframe where each row
-        
+# create pandas dataframe where each row is a bucket
+df = pd.DataFrame(all_bucket_strings, columns=['q_strings'])
+df.to_csv('final_csv/turk_hits.csv', index=False)
 
+# split into first 10% and last 90% of the buckets & save as csv
+df_10 = df.iloc[:12]
+df_90 = df.iloc[12:]
+df_10.to_csv('final_csv/turk_hits_10.csv', index=False)
+df_90.to_csv('final_csv/turk_hits_90.csv', index=False)
 
-# # print set stats: number uniques (if bad distrib, reseed)
-# print("Set stats:")
-# print("===================================")
-# for i, s in enumerate(sets):
-#     subjects_set = set()
-#     sentences_set = set()
-#     baselines_set = set()
-#     for c in s:
-#         subjects_set.add(c[0])
-#         sentences_set.add(c[1])
-#         baselines_set.add(c[2])
-#     print(f"Set {i+1}:")
-#     print(f"Unique subjects: {len(subjects_set)}")
-#     print(f"Unique sentences: {len(sentences_set)}")
-#     print(f"Unique baselines: {len(baselines_set)}")
-#     print()
-
-# # concat vids
-# for i, s in enumerate(sets):
-#     for j, c in enumerate(s):
-#         subject, sentence, baseline, ours_left = c
-#         if ours_left:
-#             filename = f"set{i+1}-{j+1}_{subject}{sentence}_ours_vs_{baseline}.mp4"
-#         else:
-#             filename = f"set{i+1}-{j+1}_{subject}{sentence}_{baseline}_vs_ours.mp4"
-#         print(filename)
-        
-#         ga_path = f"ga/{subject}{sentence}_{baseline}.mp4"
-#         talkg_path = f"talkg/{subject}{sentence}_{baseline}.mp4"
-#         instag_path = f"instag/{subject}{sentence}_{baseline}.mp4"
-#         ours_path = f"ours/{subject}{sentence}_ours.mp4"
-
-#         # make concat vid
-
-# # save the sets 
-# with open('random_sets.pkl', 'wb') as f:
-#     pickle.dump(sets, f)
+# split into 3 groups, first 10%, middle 40%, last 50% of the buckets & save as csv
+df_10 = df.iloc[:12]
+df_40 = df.iloc[12:60]
+df_50 = df.iloc[60:]
+df_10.to_csv('final_csv/turk3split_hits_10.csv', index=False)
+df_40.to_csv('final_csv/turk3split_hits_40.csv', index=False)
+df_50.to_csv('final_csv/turk3split_hits_50.csv', index=False)
