@@ -1,0 +1,16 @@
+Face Detection Summary from the output:
+
+4DGS method (560x816 videos):
+- Face positions varied from Y=118 to Y=318 
+- Face sizes ranged from 257x257 to 345x345
+- Shows significant vertical variation in face placement
+
+LAM method (275x401 videos):
+- Face positions varied from Y=40 to Y=151
+- Face sizes ranged from 144x144 to 181x181  
+- Also shows good vertical variation
+
+GA method (550x802 videos):
+- Face positions varied from Y=127 to Y=324
+- Face sizes ranged from 237x237 to 378x378
+- Wide range of face positions and sizes
