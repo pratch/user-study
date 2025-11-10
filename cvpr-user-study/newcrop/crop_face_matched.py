@@ -232,6 +232,24 @@ def crop_and_resize_video(input_path, output_path, crop_x, crop_y, crop_size):
         print(f"Error processing {input_path}: {e}")
         return False
 
+def reencode_video_no_crop(input_path, output_path):
+    """Re-encode video without cropping (for videos already at 512x512 like gaga and ar)."""
+    cmd = [
+        'ffmpeg', '-i', str(input_path),
+        '-c:v', 'libx264', '-crf', '10', '-preset', 'veryslow',
+        '-pix_fmt', 'yuv420p',
+        '-c:a', 'copy',
+        '-y',
+        str(output_path)
+    ]
+    
+    try:
+        subprocess.run(cmd, check=True, capture_output=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Error processing {input_path}: {e}")
+        return False
+
 def load_crop_cache(cache_file):
     """Load crop cache from JSON file."""
     if cache_file.exists():
@@ -277,7 +295,7 @@ def process_videos(methods_to_process=None):
     
     # Default methods to process if none specified
     if methods_to_process is None:
-        methods_to_process = ['ga', '4dgs', 'hr', 'lam']
+        methods_to_process = ['ga', '4dgs', 'hr', 'lam', 'gaga', 'ar']
     
     print(f"Methods to process: {', '.join(methods_to_process)}")
     
@@ -289,9 +307,15 @@ def process_videos(methods_to_process=None):
         print(f"Processing method: {method}")
         print(f"{'='*60}")
         
-        # Load or initialize cache for this method
-        cache_file = cache_dir / f"{method}_crop_cache.json"
-        crop_cache = load_crop_cache(cache_file)
+        # Check if this is a reference method (gaga or ar) that needs re-encoding only
+        is_reference_method = method in ['gaga', 'ar']
+        
+        # Load or initialize cache for this method (skip cache for reference methods)
+        if not is_reference_method:
+            cache_file = cache_dir / f"{method}_crop_cache.json"
+            crop_cache = load_crop_cache(cache_file)
+        else:
+            print(f"  Note: {method} is a reference method - will re-encode without cropping")
         
         # Try to find method in any of the base directories
         method_found = False
@@ -303,9 +327,14 @@ def process_videos(methods_to_process=None):
             method_found = True
             print(f"\n  Found method in: {base_dir.name}")
             
-            # Process front videos (_scale1.5)
+            # Process front videos (_scale1.5 or just method name for reference methods)
             print(f"  --- Processing FRONT videos from {base_dir.name} ---")
-            input_method_dir = base_dir / method / f"{method}_scale1.5"
+            
+            # Reference methods (gaga, ar) use different directory structure
+            if is_reference_method:
+                input_method_dir = base_dir / method / method
+            else:
+                input_method_dir = base_dir / method / f"{method}_scale1.5"
             
             if not input_method_dir.exists():
                 print(f"    Warning: Input directory {input_method_dir} not found, skipping front videos...")
@@ -320,6 +349,23 @@ def process_videos(methods_to_process=None):
                 
                 for video_file in sorted(video_files):
                     print(f"\n    Processing {video_file.name}...")
+                    
+                    # For reference methods (gaga, ar), just re-encode without cropping
+                    if is_reference_method:
+                        # Output file (remove _scale1.5 suffix if present)
+                        output_name = video_file.name.replace('_scale1.5', '')
+                        output_file = output_method_dir / output_name
+                        
+                        print(f"      Re-encoding without crop (already 512x512)")
+                        
+                        # Re-encode without cropping
+                        if reencode_video_no_crop(video_file, output_file):
+                            total_processed += 1
+                            print(f"      ✓ Successfully processed to {output_file}")
+                        else:
+                            total_errors += 1
+                            print(f"      ✗ Failed to process")
+                        continue
                     
                     # Extract subject info from filename (e.g., ga_heygen_A_104_scale1.5.mp4 -> A, 104)
                     filename = video_file.stem  # Remove .mp4
@@ -430,12 +476,21 @@ def process_videos(methods_to_process=None):
                         print(f"      ✗ Failed to process")
                 
                 # Save cache after processing front videos from this base directory
-                save_crop_cache(cache_file, crop_cache)
-                print(f"\n    Saved crop cache to {cache_file}")
+                if not is_reference_method:
+                    save_crop_cache(cache_file, crop_cache)
+                    print(f"\n    Saved crop cache to {cache_file}")
             
-            # Process rotated videos (_rotated_scale1.5) using cached crop parameters
+            # Process rotated videos (_rotated_scale1.5 or _rotated for reference methods)
             print(f"  --- Processing ROTATED videos from {base_dir.name} ---")
-            input_rotated_dir = base_dir / method / f"{method}_rotated_scale1.5"
+            
+            # Reference methods (gaga, ar) might use different directory structure
+            if is_reference_method:
+                # Try both possible naming conventions
+                input_rotated_dir = base_dir / method / f"{method}_rotated"
+                if not input_rotated_dir.exists():
+                    input_rotated_dir = base_dir / method / f"{method}_rotated_scale1.5"
+            else:
+                input_rotated_dir = base_dir / method / f"{method}_rotated_scale1.5"
             
             if not input_rotated_dir.exists():
                 print(f"    Warning: Rotated input directory {input_rotated_dir} not found, skipping rotated videos...")
@@ -450,6 +505,23 @@ def process_videos(methods_to_process=None):
                 
                 for video_file in sorted(rotated_video_files):
                     print(f"\n    Processing {video_file.name}...")
+                    
+                    # For reference methods (gaga, ar), just re-encode without cropping
+                    if is_reference_method:
+                        # Output file (replace _rotated_scale1.5 with _rotated)
+                        output_name = video_file.name.replace('_rotated_scale1.5', '_rotated')
+                        output_file = output_method_rotated_dir / output_name
+                        
+                        print(f"      Re-encoding without crop (already 512x512)")
+                        
+                        # Re-encode without cropping
+                        if reencode_video_no_crop(video_file, output_file):
+                            total_processed += 1
+                            print(f"      ✓ Successfully processed to {output_file}")
+                        else:
+                            total_errors += 1
+                            print(f"      ✗ Failed to process")
+                        continue
                     
                     # Extract subject info from filename (e.g., ga_heygen_A_104_rotated_scale1.5.mp4 -> A, 104)
                     filename = video_file.stem  # Remove .mp4
@@ -513,7 +585,7 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Process all default methods (ga, 4dgs, hr, lam)
+  # Process all default methods (ga, 4dgs, hr, lam, gaga, ar)
   python crop_face_matched.py
   
   # Process specific methods
@@ -521,6 +593,9 @@ Examples:
   
   # Process a single method
   python crop_face_matched.py --methods lam
+  
+  # Process reference methods only (gaga and ar will be re-encoded without cropping)
+  python crop_face_matched.py --methods gaga ar
   
   # Process a new method
   python crop_face_matched.py --methods my_new_method

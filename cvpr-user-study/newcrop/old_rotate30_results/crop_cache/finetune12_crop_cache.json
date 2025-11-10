@@ -1,0 +1,122 @@
+{
+  "A_074": {
+    "target_ratio": 0.2638587951660156,
+    "target_y_position": 0.84375,
+    "face_bbox": [
+      286,
+      395,
+      352,
+      352
+    ],
+    "crop_x": 120,
+    "crop_y": 169,
+    "crop_size": 685,
+    "video_width": 826,
+    "video_height": 1204
+  },
+  "A_104": {
+    "target_ratio": 0.22720718383789062,
+    "target_y_position": 0.837890625,
+    "face_bbox": [
+      237,
+      447,
+      329,
+      329
+    ],
+    "crop_x": 56,
+    "crop_y": 197,
+    "crop_size": 690,
+    "video_width": 826,
+    "video_height": 1204
+  },
+  "A_218": {
+    "target_ratio": 0.2549152374267578,
+    "target_y_position": 0.826171875,
+    "face_bbox": [
+      288,
+      356,
+      331,
+      331
+    ],
+    "crop_x": 126,
+    "crop_y": 145,
+    "crop_size": 655,
+    "video_width": 826,
+    "video_height": 1204
+  },
+  "A_253": {
+    "target_ratio": 0.2579345703125,
+    "target_y_position": 0.810546875,
+    "face_bbox": [
+      292,
+      447,
+      318,
+      318
+    ],
+    "crop_x": 138,
+    "crop_y": 257,
+    "crop_size": 626,
+    "video_width": 826,
+    "video_height": 1204
+  },
+  "A_264": {
+    "target_ratio": 0.22720718383789062,
+    "target_y_position": 0.8486328125,
+    "face_bbox": [
+      233,
+      489,
+      299,
+      299
+    ],
+    "crop_x": 69,
+    "crop_y": 255,
+    "crop_size": 627,
+    "video_width": 826,
+    "video_height": 1204
+  },
+  "A_302": {
+    "target_ratio": 0.2471027374267578,
+    "target_y_position": 0.83984375,
+    "face_bbox": [
+      321,
+      434,
+      300,
+      300
+    ],
+    "crop_x": 170,
+    "crop_y": 227,
+    "crop_size": 603,
+    "video_width": 826,
+    "video_height": 1204
+  },
+  "A_306": {
+    "target_ratio": 0.216094970703125,
+    "target_y_position": 0.8232421875,
+    "face_bbox": [
+      252,
+      413,
+      274,
+      274
+    ],
+    "crop_x": 95,
+    "crop_y": 202,
+    "crop_size": 589,
+    "video_width": 826,
+    "video_height": 1204
+  },
+  "A_460": {
+    "target_ratio": 0.230865478515625,
+    "target_y_position": 0.8408203125,
+    "face_bbox": [
+      298,
+      528,
+      267,
+      267
+    ],
+    "crop_x": 154,
+    "crop_y": 328,
+    "crop_size": 555,
+    "video_width": 826,
+    "video_height": 1204
+  }
+}

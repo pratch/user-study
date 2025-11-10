@@ -3,18 +3,18 @@ import random
 import pickle
 import pandas as pd
 
-random.seed(44)
+random.seed(45) # need to keep reseeding until last bucket is unique, otherwise stuck in while loop
 
-num_responders = 20
 
 subjects = ['074','104','218','253','264','302','304','306','460']
 sentences = ['A','B']
-baselines = ['ga','talkg','instag']
+baselines = ['ga','gaga','4dgs','hr','ar','lam']
 
 # combinations = list(product(subjects, sentences, baselines))
 # random.shuffle(combinations)
 
-num_responders = 20
+# num_responders = 20
+num_responders = 10
 
 # create a list of all combinations, duplicated num_responders times
 # half of the responders will have ours_left = True, half will have ours_left = False
@@ -31,7 +31,7 @@ for i, c in enumerate(combinations):
 
 
 buckets = []
-num_HITs = 120
+num_HITs = 120 # num_HITS = total combinations / 9 combinations per HIT = 9*2*6*10 / 9 = 240
 for i in range(num_HITs):
     # need to keep reseeding until last bucket is unique, otherwise stuck in while loop
     # if i == 119:
@@ -59,7 +59,7 @@ for i in range(num_HITs):
         print(f"{subject}, {sentence}, {baseline}, {ours_left}")
 
 # sanity check:  
-# check if ('074','A','ga',True) appear exactly 10 times in all buckets
+# check if ('074','A','ga',True) appear exactly num_responders // 2 times in all buckets
 # count = 0
 # for i, b in enumerate(buckets):
 #     for c in b:
