@@ -16,6 +16,7 @@ mkdir -p $labelled_path
 
 subjects=("074" "104" "218" "253" "264" "302" "304" "306" "460")
 competing_methods=("ga" "4dgs" "hr" "ar" "gaga" "lam")
+# competing_methods=("ar")
 
 # First, create all labeled videos (non-parallel to avoid conflicts)
 echo "Creating labeled videos..."
