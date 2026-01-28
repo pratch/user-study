@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Evaluation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .content {
+            text-align: left;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #555;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul > li {
+            margin: 10px 0;
+        }
+
+        ul ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+
+        ul ul li {
+            margin: 5px 0;
+        }
+        .criteria {
+            font-weight: bold;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        .rd {
+            color: red;
+        }
+
+        .sample-container {
+            margin-bottom: 40px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .main-label {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 30px;
+            margin-right: 30px;
+            width: 360px;
+            display: inline-block;
+        }
+
+        .background-container {
+            flex: 1;
+            text-align: center;
+            width: 100%;
+            margin-right: 20px;
+        }
+
+        .background-image {
+            max-width: 400px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .options-container {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .option-group {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .option-container {
+            text-align: center;
+            margin: 0 0px;
+            display: block;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .option-image {
+            max-width: 400px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .option-label {
+            font-size: 17px;
+            margin-top: 7px;
+            margin-bottom: 7px;
+            cursor: pointer;     
+            font-weight: bold;
+        }
+        input[type="radio"] {
+            cursor: pointer;     
+        }
+        
+        .image-label {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .background-image, .option-image {
+                max-width: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .instruction {
+                font-size: 14px;
+            }
+
+            .background-image, .option-image {
+                max-width: 80px;
+            }
+        }
+         
+        .ga {
+            background-color: #F9F9F9;
+        }
+        .gb {
+            background-color: #EFEFEF;
+        }
+        .instruction {
+            font-size: 18px;
+        }
+
+        .comparison-table {
+            width: 800px;
+            margin: 20px auto;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .comparison-table th, .comparison-table td {
+            text-align: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            width: 60%;
+            text-align: center;
+        }
+        .comparison-table th:not(:first-child),
+        .comparison-table td:not(:first-child) {
+            width: 20%;
+        }
+
+        .comparison-table tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #efefef;
+        }
+
+        .template {
+            display: none;
+        }
+
+        input[type="radio"]:disabled + label {
+            color: gray;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .option-label:has(+ input[type="radio"]:disabled) {
+            color: gray;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- MTurk Instructions -->
+    <crowd-form>
+        <short-instructions>
+            Please check the instruction at the top of this page.
+        </short-instructions>
+        <div class="content">
+            <h1>Lip-Sync Video Evaluation Task</h1>
+            <p>This HIT contains <strong>9 tasks</strong>.</p>
+            <p>In each task, you will watch 2 lip-sync videos <b>with audio</b> and evaluate them based on <b>3 criteria</b>. 
+            <br>For each criterion, please select which method <b>(A or B)</b> performs better.</p>
+
+            <p><b style="color: red;font-size:20px;"><img src="https://upload.wikimedia.org/wikipedia/commons/2/21/Speaker_Icon.svg" alt="Speaker Icon" style="width: 2em; height: 2em; vertical-align: middle;"> AUDIO REQUIRED: Please make sure your speakers or headphones are turned on.</b></p>
+
+            <div class="instructions">
+                <h2>Evaluation Criteria</h2>
+                <ul>
+                    <li>
+                        <span class="criteria">1. Lip-sync Accuracy</span> 
+                        <ul>
+                            <li>Do the lips move in a way that is consistent with the words being spoken?</li>
+                            <li>Do the lip movements look natural?</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="criteria">2. Video Realness</span> 
+                        <ul>
+                            <li>Does the subject look like a real human, rather than computer-generated or obviously synthetic?</li>
+                            <li>Are facial subtleties and expressions animated realistically?</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="criteria">3. Image Quality</span> 
+                        <ul>
+                            <li>Does each video frame look sharp and detailed?</li>
+                            <li>Are there any noticeable visual artifacts, such as noise, blurring, or color shifting?</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+    
+
+        </div>
+
+        <div id="main">
+
+        </div>
+
+         <!-- Sample 1 -->
+         <div class="sample-container template">
+            <div class="row">
+                <div class="options-container">
+                    <div class="option-group">
+                        <!-- Image A -->
+                        <div class="option-container">
+                            <div class="image-label">Task #{tasknum}: Do you prefer method A or B?</div>
+                            <video id="{question}-video" width="1120" controlsList="nodownload noremoteplayback" controls>
+                                <source src="https://pratch.github.io/user-study/cvpr-user-study-liveport/final_videos_concat_liveport/{question}.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                       
+                    </div>
+
+                    <div id="{question}-warn" style="background-color: #FFFACD; border: 1px solid #E0C200; padding: 10px;">
+                        <strong>Instruction:</strong> Please play the video with sound to the end before answering.
+                    </div>
+                       
+                    <!-- Background -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="{subj}_{sen}_{methodA}_{methodB}_q1_op0">Method A</label>
+                            <input type="radio" id="{subj}_{sen}_{methodA}_{methodB}_q1_op0" name="{subj}_{sen}_{methodA}_{methodB}_q1" value="{methodA}" required disabled>
+                            <label class="main-label"><b>Lip Synchronization</b></label>
+                            <label class="option-label" for="{subj}_{sen}_{methodA}_{methodB}_q1_op1">Method B</label>
+                            <input type="radio" id="{subj}_{sen}_{methodA}_{methodB}_q1_op1" name="{subj}_{sen}_{methodA}_{methodB}_q1" value="{methodB}" required disabled>
+                        </div>
+                    </div>
+                    <!-- Instruction Adherence -->
+                    <div class="option-group gb">
+                        <div class="option-container">
+                            <label class="option-label" for="{subj}_{sen}_{methodA}_{methodB}_q2_op0">Method A</label>
+                            <input type="radio" id="{subj}_{sen}_{methodA}_{methodB}_q2_op0" name="{subj}_{sen}_{methodA}_{methodB}_q2" value="{methodA}" required disabled>
+                            <label class="main-label"><b>Video Realness</b></label>
+                            <label class="option-label" for="{subj}_{sen}_{methodA}_{methodB}_q2_op1">Method B</label>
+                            <input type="radio" id="{subj}_{sen}_{methodA}_{methodB}_q2_op1" name="{subj}_{sen}_{methodA}_{methodB}_q2" value="{methodB}" required disabled>
+                        </div>
+                    </div>
+                    <!-- Image Quality -->
+                    <div class="option-group ga">
+                        <div class="option-container">
+                            <label class="option-label" for="{subj}_{sen}_{methodA}_{methodB}_q3_op0">Method A</label>
+                            <input type="radio" id="{subj}_{sen}_{methodA}_{methodB}_q3_op0" name="{subj}_{sen}_{methodA}_{methodB}_q3" value="{methodA}" required disabled>
+                            <label class="main-label"><b>Image Quality</b></label>
+                            <label class="option-label" for="{subj}_{sen}_{methodA}_{methodB}_q3_op1">Method B</label>
+                            <input type="radio" id="{subj}_{sen}_{methodA}_{methodB}_q3_op1" name="{subj}_{sen}_{methodA}_{methodB}_q3" value="{methodB}" required disabled>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- Repeat for more samples as needed -->
+
+        <script>
+            const question_strings = "${q_strings}";
+
+            let questions = question_strings.split("#");
+            var n_questions = questions.length;
+            console.log("[#] Number of questions: ", n_questions);
+        
+            for (let i = 0; i < n_questions; i++) {
+                let div = document.querySelector('.template').cloneNode(true);
+                div.classList.remove('template');
+
+                let question_components = questions[i].split("_");
+
+                let subj = question_components[1];
+                let sen = question_components[2];
+                let methodA = question_components[3];
+                let methodB = question_components[5];
+                let tasknum = i + 1;
+
+                console.log(subj, sen, methodA, methodB);
+        
+                let tem = div.innerHTML;
+                tem = tem.replace(/{subj}/g, subj);
+                tem = tem.replace(/{sen}/g, sen);
+                tem = tem.replace(/{methodA}/g, methodA);
+                tem = tem.replace(/{methodB}/g, methodB);
+                tem = tem.replace(/{question}/g, questions[i]);
+                tem = tem.replace(/{tasknum}/g, tasknum);
+            
+                div.innerHTML = tem;
+        
+                document.getElementById('main').appendChild(div);
+
+                const video = document.getElementById(questions[i] + "-video");
+                const warning = document.getElementById(questions[i] + "-warn");
+
+                video.addEventListener('ended', () => {
+                    warning.style.display = 'none';
+
+                    const radios1 = document.querySelectorAll('input[name="' + subj + '_' + sen + '_' + methodA + '_' + methodB + '_q1"]');
+                    radios1.forEach(radio => {
+                        console.log(radio);
+                        radio.disabled = false;
+                    });
+                    const radios2 = document.querySelectorAll('input[name="' + subj + '_' + sen + '_' + methodA + '_' + methodB + '_q2"]');
+                    radios2.forEach(radio => {
+                        console.log(radio);
+                        radio.disabled = false;
+                    });
+                    const radios3 = document.querySelectorAll('input[name="' + subj + '_' + sen + '_' + methodA + '_' + methodB + '_q3"]');
+                    radios3.forEach(radio => {
+                        console.log(radio);
+                        radio.disabled = false;
+                    });
+                });
+            }
+
+            document.querySelector('crowd-form').onsubmit = function(e) {
+                const radios = Array.from(document.querySelectorAll('input[type="radio"]')).filter(r => !r.closest('.template'));
+                const radioGroups = new Set();
+
+                radios.forEach(radio => {
+                    radioGroups.add(radio.name);
+                });
+
+                let allAnswered = true;
+
+                radioGroups.forEach(name => {
+                    const groupRadios = document.querySelectorAll('input[name="' + name + '"]');
+                    const enabledRadios = Array.from(groupRadios).filter(r => !r.disabled && !r.closest('.template'));
+                    const oneIsChecked = enabledRadios.some(r => r.checked);
+
+                    if (enabledRadios.length === 0 || !oneIsChecked) {
+                        allAnswered = false;
+                    }
+                });
+
+                if (!allAnswered) {
+                    e.preventDefault();
+                    alert("Please watch all videos and answer all questions before submitting.");
+                } else {
+                    alert("Thank you for your time!");
+                }
+            };
+
+
+
+          </script> 
+        
+    </crowd-form>
+</div>
+</body>
+</html>
